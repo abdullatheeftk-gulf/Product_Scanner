@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "68446029749",
+    "project_id": "product-scanner-f73ad",
+    "storage_bucket": "product-scanner-f73ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68446029749:android:406398f0bd42be20a5bbfc",
+        "android_client_info": {
+          "package_name": "com.gulftechiinovations.product_scanner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXUpd3WcIsCgAAEiF8kZ6lFQTkskjSL8I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
