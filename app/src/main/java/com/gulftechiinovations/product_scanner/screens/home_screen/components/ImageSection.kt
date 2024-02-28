@@ -1,16 +1,13 @@
 package com.gulftechiinovations.product_scanner.screens.home_screen.components
 
+
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-
-
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,24 +18,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.gulftechiinovations.product_scanner.R
-import com.gulftechiinovations.product_scanner.models.Product
 import com.gulftechiinovations.product_scanner.util.HttpConstants
 
-private const val TAG = "ImageSection"
+//private const val TAG = "ImageSection"
 @Composable
 fun RowScope.ImageSection(
     scannedBarcode:String,
     baseUrl:String
 ) {
     val imageUrl = "$baseUrl${HttpConstants.GET_PRODUCT_IMAGE_BY_BARCODE}$scannedBarcode"
-    Log.w(TAG, "ImageSection: $imageUrl", )
+    //Log.w(TAG, "ImageSection: $imageUrl", )
 
     var showProgressBar by remember {
         mutableStateOf(false)
@@ -63,11 +58,11 @@ fun RowScope.ImageSection(
                 contentDescription = null,
                 placeholder = null,
                 onLoading = {
-                    Log.i(TAG, "ImageSection: $it")
+                    //Log.i(TAG, "ImageSection: $it")
                     showProgressBar = true
                 },
                 onSuccess = {
-                    Log.d(TAG, "ImageSection: $it")
+                   // Log.d(TAG, "ImageSection: $it")
                     showProgressBar = false
                 },
                 modifier = Modifier
@@ -78,7 +73,7 @@ fun RowScope.ImageSection(
                 error = painterResource(id = R.drawable.no_image),
                 onError = {
                     showProgressBar = false
-                    Log.e(TAG, "ImageSection: ${it.result.throwable.message}")
+                   // Log.e(TAG, "ImageSection: ${it.result.throwable.message}")
                 }
             )
             if(showProgressBar){

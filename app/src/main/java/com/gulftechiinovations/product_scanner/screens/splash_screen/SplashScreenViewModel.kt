@@ -1,16 +1,11 @@
 package com.gulftechiinovations.product_scanner.screens.splash_screen
 
-import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-
-import androidx.compose.runtime.mutableStateOf
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gulftechiinovations.product_scanner.data.api.ApiService
 import com.gulftechiinovations.product_scanner.data.data_store.DataStoreService
 import com.gulftechiinovations.product_scanner.data.firebase.FireStoreService
+import com.gulftechiinovations.product_scanner.models.FirebaseError
 import com.gulftechiinovations.product_scanner.models.GetDataFromRemote
 import com.gulftechiinovations.product_scanner.models.license.UniLicenseDetails
 import com.gulftechiinovations.product_scanner.navigation.RootNavScreens
@@ -28,7 +23,7 @@ import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 
-private const val TAG = "SplashScreenViewModel"
+//private const val TAG = "SplashScreenViewModel"
 
 @HiltViewModel
 class SplashScreenViewModel @Inject constructor(
@@ -48,9 +43,10 @@ class SplashScreenViewModel @Inject constructor(
 
 
     init {
-        //sharedMemory.deviceId = deviceId
+
         getUniposLicenseDetailsFromDataStore()
         getIpAddressFromDataStore()
+
 
     }
 
@@ -148,7 +144,7 @@ class SplashScreenViewModel @Inject constructor(
     private fun getBaseUrlFromDataStoreAndSaveInSharedMemory() {
         viewModelScope.launch {
             dataStoreService.readBaseUrl().collectLatest {
-                Log.w(TAG, "getBaseUrlAndSaveItOnSharedMemory: $it")
+                //Log.w(TAG, "getBaseUrlAndSaveItOnSharedMemory: $it")
 
                 if (it.isNotEmpty() || it.isNotBlank()) {
                     sharedMemory.baseUrl = it
@@ -201,6 +197,13 @@ class SplashScreenViewModel @Inject constructor(
                         val errorMessage = "${error.code}, ${error.message}"
                         sendUiEvent(UiEvent.ShowSnackBar(errorMessage))
                         sendUiEvent(UiEvent.ShowSetBaseUrlButton)
+
+                        val firebaseError = FirebaseError(
+                            errorMessage = errorMessage,
+                            errorCode = error.code,
+                            ipAddress = sharedMemory.ipAddress
+                        )
+                        fireStoreService.addError(firebaseError)
                     }
                 }
             }

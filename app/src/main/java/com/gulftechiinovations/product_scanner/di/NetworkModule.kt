@@ -55,7 +55,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiService(client: HttpClient,sharedMemory: SharedMemory,deviceId:String): ApiService = ApiServiceImpl(apiClient = client, sharedMemory = sharedMemory, deviceId = deviceId)
+    fun provideApiService(client: HttpClient,sharedMemory: SharedMemory): ApiService = ApiServiceImpl(apiClient = client, sharedMemory = sharedMemory)
 
     @Provides
     @Singleton

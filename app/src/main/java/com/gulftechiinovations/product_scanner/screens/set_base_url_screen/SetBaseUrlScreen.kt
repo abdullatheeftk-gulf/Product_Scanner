@@ -1,6 +1,5 @@
 package com.gulftechiinovations.product_scanner.screens.set_base_url_screen
 
-import android.util.Log
 import android.util.Patterns
 import android.webkit.URLUtil
 import androidx.compose.foundation.layout.Column
@@ -42,7 +41,7 @@ import com.gulftechiinovations.product_scanner.screens.set_base_url_screen.compo
 import com.gulftechiinovations.product_scanner.screens.ui_util.UiEvent
 import kotlinx.coroutines.flow.collectLatest
 
-private const val TAG = "SetBaseUrlScreen"
+//private const val TAG = "SetBaseUrlScreen"
 @Composable
 fun SetBaseUrlScreen(
     navHostController: NavHostController,
@@ -74,7 +73,7 @@ fun SetBaseUrlScreen(
         SnackbarHostState()
     }
 
-    Log.d(TAG, "SetBaseUrlScreen: $showProgressBar")
+    //Log.d(TAG, "SetBaseUrlScreen: $showProgressBar")
 
 
     LaunchedEffect(true) {

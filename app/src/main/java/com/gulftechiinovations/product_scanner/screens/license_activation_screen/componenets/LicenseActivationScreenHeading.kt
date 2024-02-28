@@ -28,13 +28,6 @@ fun LicenseActivationScreenHeading() {
             verticalAlignment = Alignment.CenterVertically
 
         ) {
-            /* Box(modifier = Modifier.size(150.dp), contentAlignment = Alignment.Center) {
-                 Image(
-                     painter = painterResource(id = R.drawable.unipos_logo),
-                     contentDescription = null,
-                     contentScale = ContentScale.Fit
-                 )
-             }*/
             Surface(
                 modifier = Modifier
                     .fillMaxSize()

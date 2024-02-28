@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gulftechiinovations.product_scanner.data.api.ApiService
 import com.gulftechiinovations.product_scanner.data.data_store.DataStoreService
+import com.gulftechiinovations.product_scanner.data.firebase.FireStoreService
+import com.gulftechiinovations.product_scanner.models.FirebaseError
 import com.gulftechiinovations.product_scanner.models.GetDataFromRemote
 import com.gulftechiinovations.product_scanner.navigation.RootNavScreens
 import com.gulftechiinovations.product_scanner.screens.ui_util.UiEvent
@@ -20,7 +22,8 @@ import javax.inject.Inject
 class SetBaseUrlScreenViewModel @Inject constructor(
     private val apiService: ApiService,
     private val sharedMemory:SharedMemory ,
-    private val dataStoreService: DataStoreService
+    private val dataStoreService: DataStoreService,
+    private val fireStoreService: FireStoreService
 ):ViewModel() {
 
     private val _uiEvent = Channel<UiEvent>()
@@ -44,6 +47,7 @@ class SetBaseUrlScreenViewModel @Inject constructor(
                     }
                     is GetDataFromRemote.Success->{
                         sendUiEvent(UiEvent.CloseProgressBar)
+                        // Saving base url on datastore
                         dataStoreService.saveBaseUrl(baseUrl = sharedMemory.baseUrl)
                         sendUiEvent(UiEvent.Navigate(RootNavScreens.HomeScreen.route))
                     }
@@ -54,6 +58,14 @@ class SetBaseUrlScreenViewModel @Inject constructor(
                         sendUiEvent(UiEvent.ShowSnackBar(errorMessage))
                         sendUiEvent(UiEvent.ShowSetBaseUrlButton)
                         sendUiEvent(UiEvent.ShowSetBaseUrlScreenErrorMessage(error.message?:"There have problem while setting base url"))
+
+                        val firebaseError = FirebaseError(
+                            errorMessage = errorMessage ,
+                            errorCode = error.code,
+                            ipAddress = sharedMemory.ipAddress
+                        )
+
+                        fireStoreService.addError(firebaseError)
                     }
                 }
             }

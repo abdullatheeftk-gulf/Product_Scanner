@@ -12,16 +12,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.gulftechiinovations.product_scanner.R
 import com.gulftechiinovations.product_scanner.models.Product
 
 @Composable
 fun RowScope.TextSection(
     product: Product,
-    scannedBarcode:String
 ) {
+    val notoArabicFonts = FontFamily(
+        Font(R.font.arabic_regular,FontWeight.W400),
+        Font(R.font.arabic_medium,FontWeight.W500),
+        Font(R.font.arabic_semi_bold,FontWeight.W600),
+        Font(R.font.arabic_bold,FontWeight.W700)
+    )
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,15 +45,26 @@ fun RowScope.TextSection(
             fontSize = 50.sp,
             color = Color.Blue,
             fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            lineHeight = 50.sp
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = product.productLocalName ?: "",
             fontSize = 48.sp,
             color = Color(0xFF016B06),
-            fontWeight = FontWeight(300),
+            fontWeight = FontWeight.W600,
+            lineHeight = 48.sp,
+            textAlign = TextAlign.Center,
+            fontFamily = notoArabicFonts
         )
         Spacer(modifier = Modifier.height(36.dp))
-        Text(text = "${product.productPrice} SAR", fontSize = 96.sp, fontWeight = FontWeight.Bold, color = Color.Red)
+        Text(
+            text = "${product.productPrice} SAR",
+            fontSize = 112.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Red,
+            lineHeight = 120.sp,
+        )
     }
 }

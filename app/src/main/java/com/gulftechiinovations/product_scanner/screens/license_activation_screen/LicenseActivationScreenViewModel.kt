@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gulftechiinovations.product_scanner.data.api.ApiService
 import com.gulftechiinovations.product_scanner.data.data_store.DataStoreService
+import com.gulftechiinovations.product_scanner.data.firebase.FireStoreService
+import com.gulftechiinovations.product_scanner.models.FirebaseError
 import com.gulftechiinovations.product_scanner.models.GetDataFromRemote
 import com.gulftechiinovations.product_scanner.models.license.LicenseRequestBody
 import com.gulftechiinovations.product_scanner.models.license.UniLicenseDetails
@@ -25,13 +27,14 @@ import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 
-private const val TAG = "LicenseActivationScreen"
+//private const val TAG = "LicenseActivationScreen"
 @HiltViewModel
 class LicenseActivationScreenViewModel @Inject constructor(
     private val sharedMemory:SharedMemory,
     private val apiService: ApiService,
     private val dataStoreService: DataStoreService,
-    private val deviceId:String
+    private val deviceId:String,
+    private val fireStoreService: FireStoreService
 ):ViewModel() {
 
     private val _uiEvent = Channel<UiEvent>()
@@ -50,7 +53,7 @@ class LicenseActivationScreenViewModel @Inject constructor(
         if(_deviceId == null){
             readDeviceIdFromDataStore()
         }
-        Log.e(TAG, "$deviceId: ", )
+       // Log.e(TAG, "$deviceId: ", )
 
     }
 
@@ -130,7 +133,7 @@ class LicenseActivationScreenViewModel @Inject constructor(
                             sharedMemory.uniLicenseDetails = uniLicenseDetails
 
                             val uniLicenseDetailsString = Json.encodeToString<UniLicenseDetails>(uniLicenseDetails)
-                            Log.e(TAG, "uniposLicenseActivation: $uniLicenseDetailsString", )
+                            //Log.e(TAG, "uniposLicenseActivation: $uniLicenseDetailsString", )
                             sendUiEvent(UiEvent.ShowAlertDialog(message = uniLicenseDetailsString))
 
 
@@ -155,7 +158,7 @@ class LicenseActivationScreenViewModel @Inject constructor(
                                     sharedMemory.uniLicenseDetails = uniLicenseDetails
 
                                     val uniLicenseDetailsString = Json.encodeToString<UniLicenseDetails>(uniLicenseDetails)
-                                    Log.e(TAG, "uniposLicenseActivation: $uniLicenseDetailsString", )
+                                   // Log.e(TAG, "uniposLicenseActivation: $uniLicenseDetailsString", )
                                     sendUiEvent(UiEvent.ShowAlertDialog(message = uniLicenseDetailsString))
 
                                 }
@@ -170,6 +173,14 @@ class LicenseActivationScreenViewModel @Inject constructor(
                         val errorMessage= error.message
                         sendUiEvent(UiEvent.ShowSnackBar(errorMessage?:"There have some problem while registering license"))
                         sendUiEvent(UiEvent.ShowLicenceActivationScreenErrorMessage(errorMessage?:"There have some problem while registering license"))
+
+                        val firebaseError = FirebaseError(
+                            errorMessage = errorMessage ?:"There have some problem while registering license",
+                            errorCode = error.code,
+                            ipAddress = sharedMemory.ipAddress
+                        )
+
+                        fireStoreService.addError(firebaseError)
 
                     }
                 }
@@ -199,6 +210,14 @@ class LicenseActivationScreenViewModel @Inject constructor(
                         val errorMessage = "${error.code}, ${error.message}"
                         sendUiEvent(UiEvent.ShowSnackBar(errorMessage))
                         sendUiEvent(UiEvent.Navigate(RootNavScreens.SetBaseUrlScreen.route))
+
+                        val firebaseError = FirebaseError(
+                            errorMessage = errorMessage ,
+                            errorCode = error.code,
+                            ipAddress = sharedMemory.ipAddress
+                        )
+
+                        fireStoreService.addError(firebaseError)
                     }
                 }
             }

@@ -1,7 +1,6 @@
 package com.gulftechiinovations.product_scanner.data.api
 
 
-import android.util.Log
 import com.gulftechiinovations.product_scanner.models.CompanyData
 import com.gulftechiinovations.product_scanner.models.Error
 import com.gulftechiinovations.product_scanner.models.GetDataFromRemote
@@ -28,12 +27,11 @@ import kotlinx.coroutines.flow.flow
 import java.net.ConnectException
 
 
-private const val TAG = "ApiServiceImpl"
+//private const val TAG = "ApiServiceImpl"
 
 class ApiServiceImpl(
     private val apiClient: HttpClient,
     private val sharedMemory: SharedMemory,
-    private val deviceId: String
 ) : ApiService {
 
     override suspend fun getWelcomeMessage(): Flow<GetDataFromRemote<WelcomeMessage>> {
@@ -148,7 +146,7 @@ class ApiServiceImpl(
         val url = sharedMemory.baseUrl + HttpConstants.COMPANY_NAME
         return flow {
             try {
-                Log.d(TAG, "getCompanyName: $url")
+                //Log.d(TAG, "getCompanyName: $url")
                 val httpResponse = apiClient.get(urlString = url)
                 when (val statusCode = httpResponse.status.value) {
 
@@ -256,7 +254,7 @@ class ApiServiceImpl(
         val url = sharedMemory.baseUrl + HttpConstants.GET_PRODUCT_BY_BARCODE + barcode
         return flow {
             try {
-                Log.d(TAG, "getIp4Address: $url")
+                //Log.d(TAG, "getIp4Address: $url")
                 val httpResponse = apiClient.get(urlString = url)
                 when (val statusCode = httpResponse.status.value) {
                     200 -> {
@@ -474,9 +472,10 @@ class ApiServiceImpl(
 
     override suspend fun getCompanyLogo(): Flow<GetDataFromRemote<ByteArray?>> {
         val url = "${sharedMemory.baseUrl}${HttpConstants.COMPANY_LOGO}"
+        //val url = "https://www.pepsico.com/images/default-source/products-brands/pepsi_12oz.png?sfvrsn=46c9ae09_3"
         return flow {
             try {
-                Log.d(TAG, "getCompanyLogo: $url")
+               // Log.d(TAG, "getCompanyLogo: $url")
                 val httpResponse = apiClient.get(urlString = url)
                 when (val statusCode = httpResponse.status.value) {
                     200 -> {
@@ -588,7 +587,7 @@ class ApiServiceImpl(
     override suspend fun uniLicenseActivation(licenseRequestBody: LicenseRequestBody): Flow<GetDataFromRemote<LicenseResponse>> {
         val url = HttpConstants.UNI_LICENSE_ACTIVATION_URL
         val rioLabKey = HttpConstants.UNI_LICENSE_HEADER
-        Log.e(TAG, "uniLicenseActivation: $url", )
+       // Log.e(TAG, "uniLicenseActivation: $url", )
         return flow {
             try {
                 val httpResponse = apiClient.post(urlString = url) {
@@ -698,7 +697,7 @@ class ApiServiceImpl(
                     )
                 )
             } catch (e: Exception) {
-                 Log.e(TAG, "uniLicenseActivation: ${e.message}", )
+                 //Log.e(TAG, "uniLicenseActivation: ${e.message}", )
                 emit(
                     GetDataFromRemote.Failed(
                         error = Error(
