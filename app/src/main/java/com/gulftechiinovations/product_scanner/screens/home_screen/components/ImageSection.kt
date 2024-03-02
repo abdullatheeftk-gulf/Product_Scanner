@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -30,6 +31,7 @@ import com.gulftechiinovations.product_scanner.util.HttpConstants
 @Composable
 fun RowScope.ImageSection(
     scannedBarcode:String,
+    width: Dp,
     baseUrl:String
 ) {
     val imageUrl = "$baseUrl${HttpConstants.GET_PRODUCT_IMAGE_BY_BARCODE}$scannedBarcode"
@@ -66,7 +68,10 @@ fun RowScope.ImageSection(
                     showProgressBar = false
                 },
                 modifier = Modifier
-                    .size(600.dp)
+                    .size(
+                        //600.dp
+                        if(width>=900.dp) 600.dp else 250.dp
+                    )
                     .aspectRatio(1f)
                     .fillMaxWidth(),
                 //.alpha(alpha = if (showProgressBarInItem && selectedIndex == index) ContentAlpha.disabled else ContentAlpha.high),

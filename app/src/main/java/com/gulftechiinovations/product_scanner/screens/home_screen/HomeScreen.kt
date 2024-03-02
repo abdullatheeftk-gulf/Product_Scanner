@@ -46,21 +46,23 @@ import com.gulftechiinovations.product_scanner.screens.home_screen.components.He
 import com.gulftechiinovations.product_scanner.screens.home_screen.components.ImageSection
 import com.gulftechiinovations.product_scanner.screens.home_screen.components.TextSection
 import com.gulftechiinovations.product_scanner.screens.ui_util.UiEvent
+import com.gulftechiinovations.product_scanner.screens.ui_util.screenSizeCalculator
 import kotlinx.coroutines.flow.collectLatest
 
-//private const val TAG = "HomeScreen"
+private const val TAG = "HomeScreen"
 
 @Composable
 fun HomeScreen(
-
     hideKeyboard: () -> Unit,
     homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 ) {
 
+    val screenSizes = screenSizeCalculator()
+    val width = screenSizes.first
+
     var showProgressBar by remember {
         mutableStateOf(false)
     }
-
 
 
     val product by homeScreenViewModel.productState
@@ -68,7 +70,6 @@ fun HomeScreen(
     val barcode by homeScreenViewModel.barcode
 
     val scannedBarcode by homeScreenViewModel.scannedBarcode
-
 
 
     val focusRequester = remember { FocusRequester() }
@@ -86,12 +87,14 @@ fun HomeScreen(
     val logoByteArray by homeScreenViewModel.companyLogo
 
     LaunchedEffect(key1 = showIdleLogo) {
-       // Log.e(TAG, "HomeScreen: $showIdleLogo")
+        // Log.e(TAG, "HomeScreen: $showIdleLogo")
         hideKeyboard()
     }
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
+        homeScreenViewModel.sendDeviceDetailsToFireStore(screenWidth = screenSizes.first.value, screenHeight = screenSizes.second.value)
+
 
 
         homeScreenViewModel.uiEvent.collectLatest { value ->
@@ -130,7 +133,7 @@ fun HomeScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            HeadingSection(companyName = companyName)
+            HeadingSection(companyName = companyName, width = width)
             product?.let {
                 Row(
                     modifier = Modifier
@@ -139,8 +142,8 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ImageSection(baseUrl = baseUrl, scannedBarcode = scannedBarcode)
-                    TextSection(product = it)
+                    ImageSection(baseUrl = baseUrl, scannedBarcode = scannedBarcode, width = width)
+                    TextSection(product = it, width = width)
                 }
             }
             if (showIdleLogo) {
@@ -150,7 +153,7 @@ fun HomeScreen(
                         bitmap = bitmap.asImageBitmap(),
                         contentDescription = null,
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxSize(0.75f)
                             .weight(1f),
                         contentScale = ContentScale.Fit
                     )
@@ -162,13 +165,24 @@ fun HomeScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "Scan Here", fontSize = 80.sp, color = Color.Red)
+                            Text(
+                                text = "Scan Here",
+                                //fontSize = 80.sp,
+                                fontSize = if (width >= 900.dp) 80.sp else 36.sp,
+                                color = Color.Red
+                            )
                             Icon(
                                 painter = painterResource(id = R.drawable.down_arrow),
                                 contentDescription = null,
                                 modifier = Modifier
-                                    .width(150.dp)
-                                    .height(300.dp),
+                                    .width(
+                                        //150.dp
+                                        if (width >= 900.dp) 150.dp else 70.dp,
+                                    )
+                                    .height(
+                                        // 300.dp
+                                        if (width >= 900.dp) 300.dp else 140.dp,
+                                    ),
                                 tint = Color.Red
                             )
                         }
@@ -224,9 +238,4 @@ private fun convertImageByteArrayToBitmap(imageData: ByteArray): Bitmap {
     return BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
 }
 
-/*
-@Preview
-@Composable
-fun HomeScreenPrev() {
-    HomeScreen()
-}*/
+

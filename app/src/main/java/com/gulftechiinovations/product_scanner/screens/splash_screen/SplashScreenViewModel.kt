@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.gulftechiinovations.product_scanner.data.api.ApiService
 import com.gulftechiinovations.product_scanner.data.data_store.DataStoreService
 import com.gulftechiinovations.product_scanner.data.firebase.FireStoreService
+import com.gulftechiinovations.product_scanner.models.DeviceData
+import com.gulftechiinovations.product_scanner.models.DeviceSize
 import com.gulftechiinovations.product_scanner.models.FirebaseError
 import com.gulftechiinovations.product_scanner.models.GetDataFromRemote
 import com.gulftechiinovations.product_scanner.models.license.UniLicenseDetails
@@ -49,6 +51,8 @@ class SplashScreenViewModel @Inject constructor(
 
 
     }
+
+
 
     private fun getUniposLicenseDetailsFromDataStore() {
         viewModelScope.launch {

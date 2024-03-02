@@ -7,6 +7,7 @@ import java.util.Date
 @Keep
 data class DeviceData(
     val manufacturerName:String?= android.os.Build.MANUFACTURER,
+    val versionName:String = "V01-02-03-2024 -actual",
     val model: String? = android.os.Build.MODEL,
     val device: String? = android.os.Build.DEVICE,
     val date:String = Date().toString(),

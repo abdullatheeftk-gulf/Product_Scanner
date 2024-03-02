@@ -472,7 +472,7 @@ class ApiServiceImpl(
 
     override suspend fun getCompanyLogo(): Flow<GetDataFromRemote<ByteArray?>> {
         val url = "${sharedMemory.baseUrl}${HttpConstants.COMPANY_LOGO}"
-        //val url = "https://www.pepsico.com/images/default-source/products-brands/pepsi_12oz.png?sfvrsn=46c9ae09_3"
+        //val url = "https://wallpapers.com/images/hd/cool-avengers-logo-3hhtahchjews61hq.jpg"
         return flow {
             try {
                // Log.d(TAG, "getCompanyLogo: $url")

@@ -39,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.gulftechiinovations.product_scanner.screens.set_base_url_screen.componenets.SetBaseUrlHeadingSection
 import com.gulftechiinovations.product_scanner.screens.ui_util.UiEvent
+import com.gulftechiinovations.product_scanner.screens.ui_util.screenSizeCalculator
 import kotlinx.coroutines.flow.collectLatest
 
 //private const val TAG = "SetBaseUrlScreen"
@@ -48,6 +49,9 @@ fun SetBaseUrlScreen(
     hideKeyboard: () -> Unit,
     setBaseUrlScreenViewModel: SetBaseUrlScreenViewModel = hiltViewModel<SetBaseUrlScreenViewModel>()
 ) {
+
+    val screenSizes = screenSizeCalculator()
+    val width = screenSizes.first
 
     var showError  by remember {
         mutableStateOf(false)
@@ -115,8 +119,11 @@ fun SetBaseUrlScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SetBaseUrlHeadingSection()
-            Spacer(modifier = Modifier.height(32.dp))
+            SetBaseUrlHeadingSection(width = width)
+            Spacer(modifier = Modifier.height(
+               // 32.dp
+                if(width>=900.dp) 32.dp else 16.dp
+            ))
             OutlinedTextField(
 
                 value = baseUrlText,
@@ -128,8 +135,8 @@ fun SetBaseUrlScreen(
                 placeholder = {
                     Text(
                         text = "Enter Base Url",
-                        //fontSize = if(screenWidth<600f) 14.sp else if(screenWidth>=600 && screenWidth<900) 18.sp else 22.sp
-                        fontSize = 42.sp
+                        //fontSize = 42.sp
+                        fontSize = if(width>=900.dp) 42.sp  else 20.sp
                     )
                 },
                 keyboardOptions = KeyboardOptions(
@@ -149,20 +156,32 @@ fun SetBaseUrlScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(focusRequester = focusRequester)
-                    .padding(vertical = it.calculateTopPadding(), horizontal = 32.dp),
+                    .padding(
+                        vertical = it.calculateTopPadding(),
+                       // horizontal = 32.dp
+                        horizontal = if(width>=900.dp) 32.dp else 16.dp
+                    ),
                 enabled = !showProgressBar,
                 textStyle = TextStyle(
-                    fontSize = 42.sp
-                    //fontSize = if (screenWidth < 600f) 14.sp else if (screenWidth >= 600 && screenWidth < 800) 18.sp else 22.sp,
+                   // fontSize = 42.sp
+                    fontSize = if(width>=900.dp) 42.sp  else 20.sp
                 ),
                 isError = showError,
                 supportingText = {
                     if (errorMessage!=null) {
-                        Text(text = errorMessage ?:"", fontSize = 28.sp, color = MaterialTheme.colorScheme.error)
+                        Text(
+                            text = errorMessage ?: "",
+                            //fontSize = 28.sp,
+                            fontSize = if(width>=900.dp) 28.sp  else 14.sp,
+                            color = MaterialTheme.colorScheme.error
+                        )
                     }
                 }
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(
+                //10.dp
+                if(width>=900.dp) 10.dp else 4.dp
+            ))
             
             Button(
                 onClick = {
@@ -183,15 +202,21 @@ fun SetBaseUrlScreen(
             ) {
                 Text(
                     text = "Set Base Url",
-                    fontSize = 42.sp,
-                    modifier = Modifier.padding(16.dp)
-                    // fontSize = if(screenWidth<600f) 14.sp else if(screenWidth>=600 && screenWidth<800) 18.sp else 22.sp
+                    //fontSize = 42.sp,
+                    fontSize = if(width>=900.dp) 42.sp  else 20.sp,
+                    modifier = Modifier.padding(
+                        //16.dp
+                        if(width>=900.dp) 16.dp  else 8.dp
+                    )
                 )
 
             }
 
             if(showProgressBar){
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(
+                   // 32.dp
+                    if(width>=900.dp) 32.dp  else 16.dp
+                ))
                 CircularProgressIndicator()
             }
         }

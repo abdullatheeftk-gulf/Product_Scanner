@@ -20,23 +20,31 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gulftechiinovations.product_scanner.R
 
 @Composable
 fun HeadingSection(
-     companyName:String?
+     companyName:String?,
+     width:Dp
 ) {
     Surface(shadowElevation = 6.dp) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp),
+                .height(
+                    //150.dp
+                    if(width>=900.dp) 150.dp else 70.dp
+                ),
             verticalAlignment = Alignment.CenterVertically
 
         ) {
-            Box(modifier = Modifier.size(150.dp), contentAlignment = Alignment.Center) {
+            Box(modifier = Modifier.size(
+                //150.dp
+                if(width>=900.dp) 150.dp else 70.dp
+            ), contentAlignment = Alignment.Center) {
                 Image(
                     painter = painterResource(id = R.drawable.unipos_logo),
                     contentDescription = null,
@@ -58,7 +66,8 @@ fun HeadingSection(
                         modifier = Modifier,
                         text = companyName ?:"Null",
                         textAlign = TextAlign.Center,
-                        fontSize = 50.sp,
+                       // fontSize = 50.sp,
+                        fontSize = if(width>=900.dp) 50.sp else 22.sp,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,

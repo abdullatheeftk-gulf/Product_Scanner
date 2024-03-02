@@ -1,5 +1,6 @@
 package com.gulftechiinovations.product_scanner.screens.home_screen
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -8,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.gulftechiinovations.product_scanner.data.api.ApiService
 import com.gulftechiinovations.product_scanner.data.data_store.DataStoreService
 import com.gulftechiinovations.product_scanner.data.firebase.FireStoreService
+import com.gulftechiinovations.product_scanner.models.DeviceData
+import com.gulftechiinovations.product_scanner.models.DeviceSize
 import com.gulftechiinovations.product_scanner.models.FirebaseError
 import com.gulftechiinovations.product_scanner.models.GetDataFromRemote
 import com.gulftechiinovations.product_scanner.models.Product
@@ -26,7 +29,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-//private const val TAG = "HomeScreenViewModel"
+private const val TAG = "HomeScreenViewModel"
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
@@ -66,8 +69,10 @@ class HomeScreenViewModel @Inject constructor(
 
     // Scanning
     fun setBarcode(value: String) {
-        _showIdleLogo.value = false
-        _barcode.value = value
+
+         Log.d(TAG, "setBarcode: ${value.length}")
+        _barcode.value = value.trim()
+        Log.e(TAG, "setBarcode: ${_barcode.value.length}")
     }
 
 
@@ -89,6 +94,18 @@ class HomeScreenViewModel @Inject constructor(
         getCompanyLogo()
         startTimer()
 
+    }
+
+    fun sendDeviceDetailsToFireStore(screenWidth:Float,screenHeight:Float){
+        viewModelScope.launch {
+            val deviceData = DeviceData(
+                screenSize = DeviceSize(
+                    screenWidth,screenHeight
+                ),
+                ipv4Address = sharedMemory.ipAddress
+            )
+            fireStoreService.addData(deviceData)
+        }
     }
 
     private fun getCompanyLogo() {
@@ -200,6 +217,7 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun getProduct(barcode: String) {
+        _showIdleLogo.value = false
         setScannedBarcode(barcode)
         sendUiEvent(UiEvent.ShowProgressBar)
         viewModelScope.launch(Dispatchers.IO) {

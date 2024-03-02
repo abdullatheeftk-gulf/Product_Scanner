@@ -1,5 +1,6 @@
 package com.gulftechiinovations.product_scanner.screens.splash_screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,15 +37,21 @@ import com.gulftechiinovations.product_scanner.R
 import com.gulftechiinovations.product_scanner.navigation.RootNavScreens
 import com.gulftechiinovations.product_scanner.screens.splash_screen.componenets.LicenseDialog
 import com.gulftechiinovations.product_scanner.screens.ui_util.UiEvent
+import com.gulftechiinovations.product_scanner.screens.ui_util.screenSizeCalculator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
+private const val TAG = "SplashScreen"
 @Composable
 fun SplashScreen(
     navHostController: NavHostController,
     splashScreenViewModel: SplashScreenViewModel = hiltViewModel<SplashScreenViewModel>()
 ) {
+
+    val screeSizes = screenSizeCalculator()
+    val width = screeSizes.first
+    Log.d(TAG, "SplashScreen: $width")
 
     var showProgressBar by remember {
         mutableStateOf(false)
@@ -98,7 +105,9 @@ fun SplashScreen(
     }
 
     if(showAlertDialog && alertDialogMessage.isNotEmpty()){
-        LicenseDialog(message = alertDialogMessage,
+        LicenseDialog(
+            message = alertDialogMessage,
+            width = width,
             onDismissRequest = {
                 showAlertDialog = false
                 alertDialogMessage = ""
@@ -123,11 +132,22 @@ fun SplashScreen(
                 ExtendedFloatingActionButton(
                     containerColor = Color(0xFF029C09),
                     contentColor = Color.White,
-                    modifier = Modifier.padding(vertical = 66.dp),
+                    modifier = Modifier.padding(
+                       // vertical = 66.dp
+                        vertical = if(width>=900.dp)  66.dp else 30.dp
+                    ),
                     onClick = splashScreenViewModel::onSetBaseUrlButtonClicked,
                     shape = CircleShape
                 ) {
-                    Text(text = "SET BASE URL", fontSize = 48.sp, modifier = Modifier.padding(all = 16.dp))
+                    Text(
+                        text = "SET BASE URL",
+                        //fontSize = 48.sp,
+                        fontSize = if(width>=900.dp) 48.sp else 20.sp,
+                        modifier = Modifier.padding(
+                           // all = 16.dp
+                            all = if(width>=900.dp) 16.dp else 8.dp
+                        )
+                    )
                 }
             }
         },
@@ -139,7 +159,12 @@ fun SplashScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Box(modifier = Modifier.size(500.dp), contentAlignment = Alignment.Center) {
+            Box(modifier = Modifier.size(
+                // 500.dp
+                if(width>=900.dp) 500.dp else 225.dp
+            ),
+                contentAlignment = Alignment.Center
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.unipos_logo),
                     contentDescription = null
